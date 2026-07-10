@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -13,20 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Make training work w/ and w/o distributed training.
-import torch
+set -euo pipefail
 
-
-def is_dist_avail_and_initialized() -> bool:
-    return torch.distributed.is_available() and torch.distributed.is_initialized()
-
-
-def get_rank() -> int:
-    if is_dist_avail_and_initialized():
-        return torch.distributed.get_rank()
-    return 0
-
-
-def barrier():
-    if is_dist_avail_and_initialized():
-        torch.distributed.barrier()
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROBOCASA_SETUP_VARIANT=robocasa365 exec bash "$SCRIPT_DIR/../robocasa/setup_RoboCasa.sh" "$@"
